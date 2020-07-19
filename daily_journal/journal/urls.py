@@ -5,10 +5,10 @@ app_name = 'journal'
 urlpatterns = [
     # ex: /journal/
     path('', views.index, name='index'),
-    # ex: /journal/change/1/
-    path('change/<int:entry_id>/', views.change_entry, name='change_entry'),
-    # ex: /journal/add/
-    path('add/<int:year>/<int:month>/<int:day>', views.add_entry, name='add_entry'),
-    # ex: /journal/get/{year}/{month}
+    # ex: /journal/entry/set/2020/1/1
+    path('entry/set/<int:year>/<int:month>/<int:day>', views.set_entry, name='set_entry'),
+    # ex: /journal/entry/2020/1/1
+    path('entry/<int:year>/<int:month>/<int:day>', views.access_entry, name='access_entry'),
+    # ex: /journal/get/{year}
     path('get/<int:year>', views.get_entries, name='get_entries'),
 ]

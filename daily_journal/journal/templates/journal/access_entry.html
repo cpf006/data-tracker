@@ -1,0 +1,23 @@
+<h1>{{ entry_date }}</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form 
+    method="post"
+    action="{% url 'journal:set_entry' year=entry_date.year month=entry_date.month day=entry_date.day %}"\
+>
+    {% csrf_token %}
+    <h2>Content</h2>
+    <textarea rows="30" cols="50" name="content">{% if entry %}{{entry.content}}{% endif %}</textarea>
+    <br>
+    {% for tracker in trackers %}
+        {% if tracker.dataoption_set.all %} 
+            <h2>{{ tracker.name }}</h2>
+            {% for option in tracker.dataoption_set.all %}
+                <input type="radio" name="tracker{{ tracker.id }}" id="option{{ forloop.counter }}" value="{{ option.id }}">
+                <label for="option{{ forloop.counter }}">{{ option.name }}</label><br>
+            {% endfor %}
+            <br>
+        {% endif %}
+    {% endfor %}
+    <br>
+    <input type="submit" value="Save">
+</form>

@@ -22,8 +22,9 @@ class Entry(models.Model):
 
 class DataResponse(models.Model):
     entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    data_tracker = models.ForeignKey(DataTracker, on_delete=models.CASCADE)
     data_option = models.ForeignKey(DataOption, on_delete=models.CASCADE)
     class Meta:
-        unique_together = ('entry', 'data_option')
+        unique_together = ('entry', 'data_tracker')
     def __str__(self):
         return self.entry.pub_date + " - " + str(self.data_option)

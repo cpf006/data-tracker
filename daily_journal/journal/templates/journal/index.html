@@ -1,5 +1,8 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'journal/style.css' %}">
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
 <div class="grid">
     <div class="grid">
         <div></div>
