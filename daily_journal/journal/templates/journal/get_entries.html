@@ -9,9 +9,17 @@
             class="content"
             data-toggle="tooltip"
             data-placement="top" 
-            title="{{ date }}"
+            title="{{ entry }}"
+            {% if entry and not tracker %} 
+            style="background-color:rgba(144, 198, 149, 1)" 
+            {% elif tracker %}
+            style="background-color:yellow;"
+            {% else %}
             style="background-color:lightgray;"
+            {% endif %}
         >
+            <a href="{% url 'journal:set_entry' year=date.year month=date.month day=date.day %}">
+            </a>
         </div>
     {% if forloop.counter|divisibleby:col_size %}
     </div>

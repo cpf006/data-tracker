@@ -2,9 +2,9 @@
 {% block content %}
 <h1>{{ entry_date }}</h1>
 <form 
-method="post"
-action="{% url 'journal:set_entry' year=entry_date.year month=entry_date.month day=entry_date.day %}"\
->
+    method="post"
+    action="{% url 'journal:set_entry' year=entry_date.year month=entry_date.month day=entry_date.day %}"
+\>
     {% csrf_token %}
     <h2>Content</h2>
     <textarea rows="30" cols="50" name="content">{% if entry %}{{entry.content}}{% endif %}</textarea>

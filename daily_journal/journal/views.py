@@ -79,7 +79,7 @@ def entries(request, year):
     # Create dictionary of every date within a year
     # incase there are missing entries
     while start_date < end_date:
-        dates[start_date] = 'Test'
+        dates[start_date] = None
         start_date += delta
     
     # Add entries for every date available
@@ -94,6 +94,7 @@ def entries(request, year):
         'journal/get_entries.html',
         {
             'dates': dates,
-            'col_size': 7
+            'col_size': 7,
+            'tracker': None
         }
     )
