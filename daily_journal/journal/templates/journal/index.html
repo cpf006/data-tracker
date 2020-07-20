@@ -1,46 +1,9 @@
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'journal/style.css' %}">
+{% extends "journal/base.html" %}
+{% block content %}
+<!DOCTYPE html>
 {% if message %}
     <p>{{ message }}</p>
 {% endif %}
-<div class="grid">
-    <div class="grid">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <div class="grid">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <div class="grid">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <div class="grid">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-    <div class="grid">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    </div>
-</div>
-{% if latest %}
-    <ul>
-    {% for entry in latest %}
-        <li><a href="{% url 'journal:change_entry' entry.id %}"> {{entry}} </a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No entries are available.</p>
-{% endif %}
+{% include "journal/grid_container.html" with id="entries" %}
+
+{% endblock %}

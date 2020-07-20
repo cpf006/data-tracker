@@ -1,0 +1,12 @@
+<div class="container" id="{{id}}">
+    <ul class="pagination">
+        <li class="page-item"><button type="button" class="btn btn-dark grid-prev">&laquo;</button></li>
+        <li class="page-item disabled grid-year"></li>
+        <li class="page-item"><button type="button" class="btn btn-dark grid-next">&raquo;</button></li>
+    </ul>
+    <div class="grid-content">
+    </div>
+</div>
+<script>
+    setGrid('{{id}}', {% now "Y" %})
+</script> 

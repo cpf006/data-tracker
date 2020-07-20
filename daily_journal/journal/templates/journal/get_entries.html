@@ -1,0 +1,27 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'journal/style.css' %}">
+{{dates.length}}
+<div class="grid">
+    <div class="grid grid-outer">
+    {% for date, entry in dates.items %}
+        <div 
+            class="content"
+            data-toggle="tooltip"
+            data-placement="top" 
+            title="{{ date }}"
+            style="background-color:lightgray;"
+        >
+        </div>
+    {% if forloop.counter|divisibleby:5 %}
+    </div>
+    <div class="grid grid-outer">
+    {% endif %}
+    {% endfor %}
+    {%if dates|length == 366 %}
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    {% endif %}
+    </div>
+</div>

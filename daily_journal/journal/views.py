@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from datetime import date
+from datetime import date, timedelta
 
 from .models import Entry, DataTracker, DataOption, DataResponse
 
@@ -70,15 +70,26 @@ def set_entry(request, year, month, day):
         {'message': "Entry for %s saved." % str(entry.pub_date)}
     )
 
-def get_entries(request, year):
-    entries = Entry.objects.filter(
+def entries(request, year):
+    dates = {}
+    start_date = date(year, 1, 1)
+    end_date = date(year+1, 1, 1)
+    delta = timedelta(days=1)
+    while start_date < end_date:
+        dates[start_date] = 'Test'
+        start_date += delta
+    
+    entries = list(Entry.objects.filter(
         pub_date__year = year
-    )
+    ).values())
+
+    for entry in entries:
+        dates[entry['pub_date']] = entry
+
     return render(
-        request, 
-        'journal/get_entries.html', 
+        request,
+        'journal/get_entries.html',
         {
-            'entries': entries,
-            'start_date': date(year, 1, 1)
+            'dates': dates
         }
     )

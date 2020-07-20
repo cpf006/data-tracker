@@ -9,6 +9,6 @@ urlpatterns = [
     path('entry/set/<int:year>/<int:month>/<int:day>', views.set_entry, name='set_entry'),
     # ex: /journal/entry/2020/1/1
     path('entry/<int:year>/<int:month>/<int:day>', views.access_entry, name='access_entry'),
-    # ex: /journal/get/{year}
-    path('get/<int:year>', views.get_entries, name='get_entries'),
+    # ex: /journal/entries/{year}
+    path('entries/<int:year>', views.entries, name='entries'),
 ]

@@ -12,16 +12,43 @@
     grid-column: 1 / 1;
 }
 
+.grid-year {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .grid > *:first-child {
     grid-row: 1 / 1;
     grid-column: 1 / 1;
 }
 
-li a {
-    color: green;
+.grid > * {
+    border: 2px white solid;
 }
 
-.grid > * {
-    background: rgba(0,0,0,0.1);
-    border: 1px white solid;
+.grid > content {    
+    background-color:lightgray;
+    transition: all .2s ease-in-out;
+}
+
+.grid-outer > * {
+    border-top-width: 1px green solid;
+}
+
+.grid > .content:hover {
+    border: 3px #343a40 solid;
+    transform: scale(1.1);
+}
+
+.ui-tooltip {
+    background: #343a40;
+    color: white;
+    border: none;
+    padding: 0;
+    opacity: 1;
+}
+
+.ui-tooltip-content {
+    position: relative;
+    padding: 1em;
 }
