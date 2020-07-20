@@ -1,15 +1,15 @@
 {% load static %}
 {% load custom_filters %}
 <link rel="stylesheet" type="text/css" href="{% static 'journal/style.css' %}">
-{{dates.length}}
+{{ dates.length }}
 <div class="grid">
     <div class="grid grid-outer">
     {% for date, entry in dates.items %}
-        <div 
+        <a 
             class="content"
             data-toggle="tooltip"
             data-placement="top" 
-            title="{{ entry }}"
+            title="{{ date }}"
             {% if entry and not tracker %} 
             style="background-color:rgba(144, 198, 149, 1)" 
             {% elif tracker %}
@@ -17,14 +17,13 @@
             {% else %}
             style="background-color:lightgray;"
             {% endif %}
+            href="{% url 'journal:access_entry' year=date.year month=date.month day=date.day %}"
         >
-            <a href="{% url 'journal:set_entry' year=date.year month=date.month day=date.day %}">
-            </a>
+        </a>
+        {% if forloop.counter|divisibleby:col_size %}
         </div>
-    {% if forloop.counter|divisibleby:col_size %}
-    </div>
-    <div class="grid grid-outer">
-    {% endif %}
+        <div class="grid grid-outer">
+        {% endif %}
     {% endfor %}
     {# Add blank filler divs to make up for remainder #}
     {% with dates_length=dates|length %}

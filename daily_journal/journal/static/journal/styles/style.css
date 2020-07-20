@@ -1,8 +1,14 @@
+.theme-btn {
+    background-color: rgba(144, 198, 149, 1);
+    color: #f8f9fa;
+}
+
 .grid-content {
     max-width: 1000px;
 	margin: 0 auto !important; 
 	float: none !important; 
 }
+
 .grid-container {
     margin-top: 10px;
 }

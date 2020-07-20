@@ -1,12 +1,54 @@
 {% extends "journal/base.html" %}
-{% block content %}
-<!DOCTYPE html>
-{% if message %}
-    <p>{{ message }}</p>
-{% endif %}
-<div class="page-header">
-    <h1>Daily Journal</h1>      
-</div>
-{%  include "journal/grid_container.html" with id="entries" title="Entries" card="bg-dark text-white"%}
 
+{% block head %}
+	{% load static %}
+	<script src="{% static 'journal/js/tracker.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="pb-2 mt-4 mb-2 border-bottom">
+		<div class="d-flex">
+			<div class="p-2"><h1>Daily Journal</h1></div>
+			<div class="ml-auto p-2">
+				<button 
+					type="button" 
+					class="btn theme-btn" 
+					data-toggle="modal"
+					data-target="#trackerModal" 
+					onclick="createTracker()"
+				>
+					Add Tracker
+				</button>
+			</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	{%  include "journal/grid_container.html" with id="entries" title="Entries" card="bg-dark text-white"%}
+	<!-- Need to for each every data tracker -->
+
+	{%  include "journal/modal.html" with id="trackerModal"%}
+	<!-- To go into modal body :: -->
+	<!-- <form>
+		<div class="form-group">
+			<label for="exampleInputEmail1">Email address</label>
+			<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+			<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+		</div>
+		<div class="form-group">
+			<label for="exampleInputPassword1">Password</label>
+			<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+		</div>
+		<div class="form-check">
+			<input type="checkbox" class="form-check-input" id="exampleCheck1">
+			<div id="color-picker-1" class="mx-auto"></div>
+			<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+		</div>
+	</form>
+	<div class="card">
+		<div class="card-body text-center d-flex justify-content-center align-items-center flex-column">
+		<p>Click the dark square to activate the Color Picker</p>
+		<div id="color-picker-1" class="mx-auto"></div>
+		</div>
+	</div> -->
 {% endblock %}
