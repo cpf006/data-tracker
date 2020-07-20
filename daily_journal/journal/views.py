@@ -37,7 +37,7 @@ def set_entry(request, year, month, day):
         pub_date__day=day
     ).first()
 
-    #Create or update entry
+    # Create or update entry
     if entry:
         entry.content = request.POST['content']
     else:
@@ -47,7 +47,7 @@ def set_entry(request, year, month, day):
         )
     entry.save()
 
-    #Save new or update tracker responses
+    # Save new or update tracker responses
     for tracker in DataTracker.objects.all():
         tracker_id = 'tracker' + str(tracker.id)
 
@@ -75,21 +75,25 @@ def entries(request, year):
     start_date = date(year, 1, 1)
     end_date = date(year+1, 1, 1)
     delta = timedelta(days=1)
+
+    # Create dictionary of every date within a year
+    # incase there are missing entries
     while start_date < end_date:
         dates[start_date] = 'Test'
         start_date += delta
     
-    entries = list(Entry.objects.filter(
+    # Add entries for every date available
+    entries = Entry.objects.filter(
         pub_date__year = year
-    ).values())
-
+    )
     for entry in entries:
-        dates[entry['pub_date']] = entry
+        dates[entry.pub_date] = entry
 
     return render(
         request,
         'journal/get_entries.html',
         {
-            'dates': dates
+            'dates': dates,
+            'col_size': 7
         }
     )

@@ -10,8 +10,19 @@ function setGrid(id, year) {
     getEntries(id, year)
 }
 
+function calculateGridWidth(id) {
+    let rows = jQuery('#'+id+' .grid-outer')
+    let rowWidth = Number(jQuery(rows[0]).css('width').replace('px',''))
+    return (rows.length * rowWidth) + "px"
+}
+
 function getEntries(id, year)
 {    
-    jQuery('#'+id+' .grid-content').load("/journal/entries/".concat(year), function() { jQuery('#'+id+' .grid-year')[0].innerHTML = year });
-    jQuery('#'+id+' .grid-content').tooltip({show: null});
+    jQuery('#'+id+' .grid-content').load("/journal/entries/".concat(year), function() {
+        jQuery('#'+id+' .grid-content').tooltip({show: null});
+        jQuery('#'+id+' .grid-year')[0].innerHTML = year 
+        jQuery('#'+id+' .grid-content').css("maxWidth", calculateGridWidth(id));
+    });
 }
+
+

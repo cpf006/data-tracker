@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 <link rel="stylesheet" type="text/css" href="{% static 'journal/style.css' %}">
 {{dates.length}}
 <div class="grid">
@@ -12,16 +13,16 @@
             style="background-color:lightgray;"
         >
         </div>
-    {% if forloop.counter|divisibleby:5 %}
+    {% if forloop.counter|divisibleby:col_size %}
     </div>
     <div class="grid grid-outer">
     {% endif %}
     {% endfor %}
-    {%if dates|length == 366 %}
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-    {% endif %}
+    {# Add blank filler divs to make up for remainder #}
+    {% with dates_length=dates|length %}
+        {%for i in dates_length|leftovers:col_size %}
+            <div></div>
+        {% endfor %}
+    {% endwith %}
     </div>
 </div>

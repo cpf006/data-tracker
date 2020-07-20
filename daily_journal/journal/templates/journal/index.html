@@ -4,6 +4,6 @@
 {% if message %}
     <p>{{ message }}</p>
 {% endif %}
-{% include "journal/grid_container.html" with id="entries" %}
+{%  include "journal/grid_container.html" with id="entries" title="Entries" card="bg-dark text-white"%}
 
 {% endblock %}
