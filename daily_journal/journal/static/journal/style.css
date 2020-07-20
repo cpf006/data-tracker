@@ -31,8 +31,9 @@
     transition: all .2s ease-in-out;
 }
 
-.grid-outer > * {
-    border-top-width: 1px green solid;
+.grid-outer {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .grid > .content:hover {
