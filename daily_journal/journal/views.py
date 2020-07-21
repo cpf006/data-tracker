@@ -4,11 +4,11 @@ from datetime import date, timedelta
 from .models import Entry, DataTracker, DataOption, DataResponse
 
 def index(request):
-    latest = Entry.objects.order_by('-pub_date')[:5]
+    trackers = DataTracker.objects.all()
     return render(
         request,
         'journal/index.html',
-        {'latest': latest}
+        {'trackers': trackers}
     )
 
 def access_entry(request, year, month, day):
@@ -20,8 +20,11 @@ def access_entry(request, year, month, day):
     entry_date = date(year, month, day)
     trackers = DataTracker.objects.all()
     option_responses = {}
-    for response in entry.dataresponse_set.all():
-        option_responses[response.data_tracker.id] = response.data_option.id
+
+    #Set tracker id to response option id
+    if(entry):
+        for response in entry.dataresponse_set.all():
+            option_responses[response.data_tracker.id] = response.data_option.id
 
     return render(
         request, 
@@ -35,6 +38,7 @@ def access_entry(request, year, month, day):
     )
 
 def set_entry(request, year, month, day):
+    message = ""
     entry = Entry.objects.filter(
         pub_date__year=year, 
         pub_date__month=month, 
@@ -49,7 +53,11 @@ def set_entry(request, year, month, day):
             content = request.POST['content'], 
             pub_date = date(year, month, day)
         )
-    entry.save()
+    try:
+        entry.save()
+        message = "Saved entry for "+ str(entry.pub_date)
+    except:
+        message = "Unable to save entry for "+ str(entry.pub_date)
 
     # Save new or update tracker responses
     for tracker in DataTracker.objects.all():
@@ -59,12 +67,14 @@ def set_entry(request, year, month, day):
             option = get_object_or_404(DataOption, pk=request.POST[tracker_id])
             response, _ = DataResponse.objects.get_or_create(entry=entry, data_tracker=tracker)
             response.data_option = option
-            response.save()
+            try:
+                response.save()
+            except:
+                message += "\n response for " + tracker.name + " was unable to save"
 
-    return render(
-        request,
+    return redirect( 
         'journal/index.html',
-        {'message': "Entry for %s saved." % str(entry.pub_date)}
+        {'message': message}
     )
 
 def entries(request, year):

@@ -23,12 +23,10 @@
 			</div>
 		</div>
 	</div>
-	<br>
-	{%  include "journal/grid_container.html" with id="entries" title="Entries" card="bg-dark text-white"%}
-	<!-- Need to for each every data tracker -->
+	{%  include "journal/grid_container.html" with title="Entries"%}
+	{% for tracker in trackers %}
+		{%  include "journal/grid_container.html" with title=tracker.name tracker=tracker %}
+	{% endfor %}
 
-	{%  include "journal/modal.html" with id="trackerModal"%}
-	<!-- To go into modal body :: -->
-	<!-- <form>
-		 -->
+	{%  include "journal/tracker_modal.html" with id="tracker"%}
 {% endblock %}
