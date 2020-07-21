@@ -1,0 +1,3 @@
+function createTracker() {
+    alert('test');
+}

@@ -19,6 +19,9 @@ def access_entry(request, year, month, day):
     ).first()
     entry_date = date(year, month, day)
     trackers = DataTracker.objects.all()
+    option_responses = {}
+    for response in entry.dataresponse_set.all():
+        option_responses[response.data_tracker.id] = response.data_option.id
 
     return render(
         request, 
@@ -26,7 +29,8 @@ def access_entry(request, year, month, day):
         {
             'entry': entry,
             'entry_date': entry_date,
-            'trackers': trackers
+            'trackers': trackers,
+            'option_responses': option_responses
         }
     )
 
@@ -52,16 +56,9 @@ def set_entry(request, year, month, day):
         tracker_id = 'tracker' + str(tracker.id)
 
         if tracker_id in request.POST:
-            response = DataResponse.objects.get(entry=entry, data_tracker=tracker)
             option = get_object_or_404(DataOption, pk=request.POST[tracker_id])
-            if response:
-                response.data_option = option
-            else:
-                response = DataResponse(
-                    entry = entry,
-                    data_option = option,
-                    data_tracker = tracker 
-                )
+            response, _ = DataResponse.objects.get_or_create(entry=entry, data_tracker=tracker)
+            response.data_option = option
             response.save()
 
     return render(

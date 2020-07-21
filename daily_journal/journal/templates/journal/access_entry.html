@@ -1,5 +1,6 @@
 {% extends "journal/base.html" %}
 {% block content %}
+{% load custom_filters %}
 <div class="pb-2 mt-4 mb-2 border-bottom">
     <h1>{{ entry_date }}</h1>
 </div>
@@ -13,7 +14,7 @@
             class="form-control"
             id="entryContent"
             name="content" 
-            rows="3"
+            rows="10"
         >{% if entry %}{{entry.content}}{% endif %}</textarea>
     </div>
     {% for tracker in trackers %}
@@ -29,6 +30,9 @@
                             name="tracker{{ tracker.id }}" 
                             id="option{{ forloop.counter }}" 
                             value="{{ option.id }}"
+                            {% if option_responses|get:tracker.id == option.id %}
+                            checked
+                            {% endif %}
                         >
                         <label class="form-check-label" for="option{{ forloop.counter }}">
                             {{ option.name }}
