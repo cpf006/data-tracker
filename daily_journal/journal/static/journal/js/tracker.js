@@ -8,6 +8,17 @@ function deleteTrackerOption(event) {
     $(event.target).parent().parent().remove();
 }
 
+function deleteTracker(id) {
+    if(confirm("Are you sure? This cannot be undone.")) {
+        $.get(
+            "/journal/delete_tracker/"+id,
+            function() {
+                location.reload();
+            }
+        );
+    }
+}
+
 function refreshModal() {
     let option = $('.tracker-modal-option').first().clone();
     $('.tracker-modal-option').remove();

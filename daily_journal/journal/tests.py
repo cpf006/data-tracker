@@ -1,9 +1,8 @@
-import sys
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
+from .models import Entry, DataTracker, DataOption
 
-from .models import Entry, DataTracker, DataOption, DataResponse
 
 class SetEntriesViewTests(TestCase):
     def test_proper_creation(self):
@@ -13,11 +12,11 @@ class SetEntriesViewTests(TestCase):
         c = Client()
         response = c.post(
             reverse(
-                'journal:set_entry', 
+                'journal:set_entry',
                 kwargs={
-                    'year':2020,
-                    'month':1,
-                    'day':1,
+                    'year': 2020,
+                    'month': 1,
+                    'day': 1,
                 }
             ),
             {'content': 'test'}
@@ -27,13 +26,46 @@ class SetEntriesViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(entry.content, 'test')
-        
-    
+
+
+class DeleteTrackerViewTests(TestCase):
+    def test_proper_deletion(self):
+        """
+        Test to ensure delete tracker deletes tracker
+        and all associated options.
+        """
+        c = Client()
+        tracker = DataTracker.objects.create(name='test', color='none')
+        DataOption.objects.create(
+            name='One',
+            color='none',
+            data_tracker=tracker
+        )
+        DataOption.objects.create(
+            name='Two',
+            color='none',
+            data_tracker=tracker
+        )
+        self.assertEqual(DataOption.objects.get(name='One').color, 'none')
+        self.assertEqual(DataOption.objects.get(name='Two').color, 'none')
+
+        response = c.post(
+            reverse(
+                'journal:delete_tracker',
+                kwargs={'pk': tracker.id}
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(DataTracker.objects.first())
+        self.assertIsNone(DataOption.objects.first())
+
+
 class SetTrackerViewTests(TestCase):
     def test_proper_creation(self):
         """
         Test to ensure set_tracker properly saves tracker
-        with its options and option colors. Also updates 
+        with its options and option colors. Also updates
         exisitng options if present.
         """
         c = Client()

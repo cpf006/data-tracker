@@ -30,6 +30,11 @@
                         </ul>
                     </div>
                     <div class="col-sm">
+                        {% if tracker %}
+                            <button type="button" class="btn btn-danger float-right" onclick="deleteTracker('{{tracker.id}}')">
+                                Delete Tracker
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
