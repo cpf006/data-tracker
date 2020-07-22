@@ -2,18 +2,14 @@
 {{ dates.length }}
 <div class="grid">
     <div class="grid grid-outer">
-    {% for date, entry in dates.items %}
+    {% for date, color in dates.items %}
         <a 
             class="content"
             data-toggle="tooltip"
             data-placement="top" 
             title="{{ date }}"
-            {% if entry and not tracker %} 
-            style="background-color:rgba(144, 198, 149, 1)" 
-            {% elif tracker %}
-            style="background-color:yellow;"
-            {% else %}
-            style="background-color:lightgray;"
+            {% if color %}
+            style="background-color:{{ color }};"
             {% endif %}
             href="{% url 'journal:access_entry' year=date.year month=date.month day=date.day %}"
         >

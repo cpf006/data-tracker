@@ -6,34 +6,34 @@
         style="background-color:{{tracker.color}} !important;"
         {% endif %}
     >
-            <div class="card-header">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm">
-                            <h2> {{ title }} </h2>
-                        </div>
-                        <div class="col-sm">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item">
-                                    <button type="button" id="{{id}}-grid-prev" class="btn btn-dark grid-prev">
-                                        &laquo;
-                                    </button>
-                                </li>
-                                <li class="page-item disabled d-flex justify-content-center">
-                                    <h3 id="{{id}}-grid-year" class="grid-year"></h3>
-                                </li>
-                                <li class="page-item">
-                                    <button type="button" id="{{id}}-grid-next" class="btn btn-dark grid-next">
-                                        &raquo;
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-sm">
-                        </div>
+        <div class="card-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <h2> {{ title }} </h2>
+                    </div>
+                    <div class="col-sm">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <button type="button" id="{{id}}-grid-prev" class="btn btn-dark grid-prev">
+                                    &laquo;
+                                </button>
+                            </li>
+                            <li class="page-item disabled d-flex justify-content-center">
+                                <h3 id="{{id}}-grid-year" class="grid-year"></h3>
+                            </li>
+                            <li class="page-item">
+                                <button type="button" id="{{id}}-grid-next" class="btn btn-dark grid-next">
+                                    &raquo;
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-sm">
                     </div>
                 </div>
             </div>
+        </div>
         <div class="card-body">
             <div class="grid-content" id="{{id}}-grid-content">
                 <div class="spinner-border text-light" role="status">
@@ -45,8 +45,8 @@
 </div>
 <script>
     setGrid(
-        '{{id}}',
-        {% now "Y" %}, 
+        '{{id}}', 
+        {% if year %}{{year}}{% else %}{% now "Y" %}{% endif %}, 
         {% if tracker %}{{ tracker.id }}{% else %}null{% endif %}
     )
 </script> 

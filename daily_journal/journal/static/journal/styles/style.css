@@ -1,5 +1,16 @@
 .body-container {
-    background-color: rgb(213, 188, 167);
+    background: #171414;
+    background: -webkit-linear-gradient(to right, #464340, #171414);
+    background: linear-gradient(to right, #464340, #171414);
+    color: #f8f9fa;
+}
+
+.modal-content {
+    border: none;
+}
+
+.hidden { 
+    display: none; 
 }
 
 .theme-btn {

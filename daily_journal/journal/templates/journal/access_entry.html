@@ -2,11 +2,9 @@
 {% block content %}
 {% load custom_filters %}
 <div class="pb-2 mt-4 mb-2 border-bottom">
-    <h1>{{ entry_date }}</h1>
+    <a href="/journal">&larr;</a> <h1>{{ entry_date }}</h1>
 </div>
-<form 
-    method="post"
-    action="{% url 'journal:set_entry' year=entry_date.year month=entry_date.month day=entry_date.day %}"\>
+<form id="entry-form" method="post" onsubmit="saveEntry({{ entry_date.year }}, {{ entry_date.month }}, {{ entry_date.day }})">
     {% csrf_token %}
     <div class="form-group">
         <label for="entryContent">Content</label>

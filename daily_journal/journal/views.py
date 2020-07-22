@@ -1,17 +1,29 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render
+from django.core import serializers
+from django.http.response import JsonResponse
 from datetime import date, timedelta
+import re
 
 from .models import Entry, DataTracker, DataOption, DataResponse
 
-def index(request):
+def index(request, year=None):
+    """
+    Loads entry year view along with year views for all trackers.
+    """
     trackers = DataTracker.objects.all()
     return render(
         request,
         'journal/index.html',
-        {'trackers': trackers}
+        {
+            'trackers': trackers,
+            'year': year
+        }
     )
 
 def access_entry(request, year, month, day):
+    """
+    Loads an entry if it exists, else loads empty entry form.
+    """
     entry = Entry.objects.filter(
         pub_date__year=year, 
         pub_date__month=month, 
@@ -38,7 +50,10 @@ def access_entry(request, year, month, day):
     )
 
 def set_entry(request, year, month, day):
-    message = ""
+    """
+    Sets an entries content if it already exists or creates a new one.
+    Sets all new data responses as well as updates any esisting ones for this entry.
+    """
     entry = Entry.objects.filter(
         pub_date__year=year, 
         pub_date__month=month, 
@@ -53,11 +68,7 @@ def set_entry(request, year, month, day):
             content = request.POST['content'], 
             pub_date = date(year, month, day)
         )
-    try:
-        entry.save()
-        message = "Saved entry for "+ str(entry.pub_date)
-    except:
-        message = "Unable to save entry for "+ str(entry.pub_date)
+    entry.save()
 
     # Save new or update tracker responses
     for tracker in DataTracker.objects.all():
@@ -67,17 +78,50 @@ def set_entry(request, year, month, day):
             option = get_object_or_404(DataOption, pk=request.POST[tracker_id])
             response, _ = DataResponse.objects.get_or_create(entry=entry, data_tracker=tracker)
             response.data_option = option
-            try:
-                response.save()
-            except:
-                message += "\n response for " + tracker.name + " was unable to save"
+            response.save()
 
-    return redirect( 
-        'journal/index.html',
-        {'message': message}
-    )
+    return JsonResponse(serializers.serialize('python', [entry,]), safe=False)
+
+def set_tracker(request):
+    """
+    Sets a trackers color if it already exists or creates a new one.
+    Creates new data options or updates existing ones.
+    """
+    tracker = DataTracker.objects.filter(name=request.POST['name']).first()
+
+    # Create or update tracker
+    if tracker:
+        tracker.color = request.POST['color']
+    else:
+        tracker = DataTracker(
+            name=request.POST['name'], 
+            color=request.POST['color']
+        )
+    tracker.save()
+
+    # Save new or update options
+    for field in request.POST:
+        if 'option_name' in field:
+            option_id = re.sub('option_name', '', field)
+            name = request.POST[field]
+            color = request.POST['option_color'+option_id]
+            option = DataOption.objects.filter(name=name, data_tracker=tracker).first()
+            if option:
+                option.color = color
+            else:
+                option = DataOption(name=name, color=color, data_tracker=tracker)
+            option.save()
+
+    return JsonResponse(serializers.serialize('python', [tracker,]), safe=False)
 
 def entries(request, year):
+    """
+    Loads entries for a specified year. 
+    If a tracker id is present the color assigned to the response option selected
+    will appear instead of the entry default.
+    """
+    entry_color = 'rgba(144, 198, 149, 1)'
+    tracker = None
     dates = {}
     start_date = date(year, 1, 1)
     end_date = date(year+1, 1, 1)
@@ -89,12 +133,20 @@ def entries(request, year):
         dates[start_date] = None
         start_date += delta
     
-    # Add entries for every date available
-    entries = Entry.objects.filter(
-        pub_date__year = year
-    )
+    #Get tracker if set
+    if 'tracker_id' in request.GET:
+        tracker = get_object_or_404(DataTracker, pk=request.GET['tracker_id'])
+
+    # Add entries color
+    entries = Entry.objects.filter(pub_date__year=year)
     for entry in entries:
-        dates[entry.pub_date] = entry
+        color = entry_color
+        if tracker:
+            color = None
+            response = DataResponse.objects.filter(entry=entry, data_tracker=tracker).first()
+            if response:
+                color = response.data_option.color
+        dates[entry.pub_date] = color
 
     return render(
         request,

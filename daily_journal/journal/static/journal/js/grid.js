@@ -1,12 +1,12 @@
 function setGrid(id, year, trackerId) {
     $('#'+id+'-grid-prev').click(function() {
-        getEntries(id, Number($('#'+id+' .grid-year').html()) - 1)
+        getEntries(id, Number($('#'+id+' .grid-year').html()) - 1, trackerId)
     })
     $('#'+id+'-grid-next').click(function() {
-        getEntries(id, Number($('#'+id+'-grid-year').html()) + 1)
+        getEntries(id, Number($('#'+id+'-grid-year').html()) + 1, trackerId)
     })
 
-    getEntries(id, year)
+    getEntries(id, year, trackerId)
 }
 
 function calculateGridWidth(id) {
@@ -15,11 +15,14 @@ function calculateGridWidth(id) {
     return (rows.length * rowWidth) + "px"
 }
 
-function getEntries(id, year, trackerId)
-{    
-    $('#'+id+'-grid-content').load("/journal/entries/".concat(year), function() {
-        $('#'+id+'-grid-content').tooltip({show: null});
-        $('#'+id+'-grid-year').html(year) 
-        $('#'+id+'-grid-content').css("maxWidth", calculateGridWidth(id));
-    });
+function getEntries(id, year, trackerId=null) { 
+    let data = year+(trackerId ? '?tracker_id='+trackerId : '');
+    $('#'+id+'-grid-content').load(
+        "/journal/entries/"+data,
+        function() {
+            $('#'+id+'-grid-content').tooltip({show: null});
+            $('#'+id+'-grid-year').html(year) 
+            $('#'+id+'-grid-content').css("maxWidth", calculateGridWidth(id));
+        }
+    );
 }
